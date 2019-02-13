@@ -21,3 +21,6 @@ myReverse :: [a] -> [a]
 myReverse xs = reverseInto [] xs
                where reverseInto acc []     = acc
                      reverseInto acc (x:xs) = reverseInto (x : acc) xs
+
+isPalindrome :: Eq a => [a] -> Bool
+isPalindrome xs = reverse xs == xs
