@@ -5,8 +5,7 @@ myLast :: [a] -> a
 myLast = head . reverse
 
 myButLast :: [a] -> a
-myButLast (x : _ : []) = x
-myButLast (x : xs)     = myButLast xs
+myButLast = head . tail . reverse
 
 elementAt :: [a] -> Int -> a
 elementAt (x:_) 1  = x
