@@ -1,8 +1,8 @@
 module Solutions where
+import Criterion.Main
 
 myLast :: [a] -> a
-myLast (x : []) = x
-myLast (x : xs) = myLast xs
+myLast = head . reverse
 
 myButLast :: [a] -> a
 myButLast (x : _ : []) = x
@@ -31,3 +31,9 @@ flatten :: NestedList a -> [a]
 flatten (Elem x) = [x]
 flatten (List []) = []
 flatten (List (x:xs)) = flatten x ++ flatten (List xs)
+
+-- main = defaultMain [
+--   bgroup "myLast" [ bench "standart"  $ whnf myLast [1..1000]
+--                   , bench "prime"  $ whnf myLast' [1..1000]
+--                   ]
+--   ]
