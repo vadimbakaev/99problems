@@ -29,6 +29,10 @@ flatten (Elem x) = [x]
 flatten (List []) = []
 flatten (List (x:xs)) = flatten x ++ flatten (List xs)
 
+compress :: Eq a => [a] -> [a]
+compress [] = []
+compress (e:xs) = e : compress (filter (/=e) xs)
+
 -- main = defaultMain [
 --   bgroup "myLast" [ bench "standart"  $ whnf myLast [1..1000]
 --                   , bench "prime"  $ whnf myLast' [1..1000]
