@@ -12,9 +12,7 @@ elementAt (x:_) 1  = x
 elementAt (_:xs) n = elementAt xs (n - 1)
 
 myLength :: [a] -> Int
-myLength = loop 0
-           where loop n []     = n
-                 loop n (x:xs) = loop (n + 1) xs
+myLength = foldl (const . (+1)) 0
 
 myReverse :: [a] -> [a]
 myReverse xs = reverseInto [] xs
