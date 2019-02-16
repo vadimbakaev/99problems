@@ -1,5 +1,6 @@
 module Solutions where
 import Criterion.Main
+import Data.List
 
 myLast :: [a] -> a
 myLast = head . reverse
@@ -36,6 +37,9 @@ compress (e:xs) = e : compress (dropWhile (==e) xs)
 pack :: Eq a => [a] -> [[a]]
 pack [] = []
 pack (e:xs) = [[e] ++ takeWhile (==e) xs] ++ pack (dropWhile (==e) xs)
+
+encode :: Eq a => [a] -> [(Int, a)]
+encode = map (\x -> (length x, head x)) . group
 
 -- main = defaultMain [
 --   bgroup "myLast" [ bench "standart"  $ whnf myLast [1..1000]
