@@ -1,4 +1,4 @@
-module Solutions where
+module Solutions01 where
 import Criterion.Main
 import Data.List
 
