@@ -23,3 +23,6 @@ decodeModified :: Eq a => [Encode a] -> [a]
 decodeModified xs = concatMap decode xs
                     where decode (Multiple n a) = replicate n a
                           decode (Single a)     = [a]
+
+dupli :: [a] -> [a]
+dupli = concatMap (replicate 2)
