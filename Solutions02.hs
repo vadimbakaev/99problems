@@ -26,3 +26,6 @@ decodeModified xs = concatMap decode xs
 
 dupli :: [a] -> [a]
 dupli = concatMap (replicate 2)
+
+repli :: [a] -> Int -> [a]
+repli xs n = concatMap (replicate n) xs
