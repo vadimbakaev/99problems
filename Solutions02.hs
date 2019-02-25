@@ -29,3 +29,9 @@ dupli = concatMap (replicate 2)
 
 repli :: [a] -> Int -> [a]
 repli xs n = concatMap (replicate n) xs
+
+dropEvery :: [a] -> Int -> [a]
+dropEvery [] _ = []
+dropEvery xs n
+            | n < 1 = []
+            | otherwise = take (n - 1) xs ++ dropEvery (drop n xs) n
