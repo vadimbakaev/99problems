@@ -16,7 +16,7 @@ myLength :: [a] -> Int
 myLength = foldl (const . (+1)) 0
 
 myReverse :: [a] -> [a]
-myReverse xs = reverseInto [] xs
+myReverse = reverseInto []
                where reverseInto acc []     = acc
                      reverseInto acc (x:xs) = reverseInto (x : acc) xs
 
@@ -36,7 +36,7 @@ compress (e:xs) = e : compress (dropWhile (==e) xs)
 
 pack :: Eq a => [a] -> [[a]]
 pack [] = []
-pack (e:xs) = [[e] ++ takeWhile (==e) xs] ++ pack (dropWhile (==e) xs)
+pack (e:xs) = (e : takeWhile (==e) xs) : pack (dropWhile (==e) xs)
 
 encode :: Eq a => [a] -> [(Int, a)]
 encode = map (\x -> (length x, head x)) . group

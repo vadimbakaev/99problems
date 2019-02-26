@@ -16,11 +16,11 @@ data Encode a = Single a | Multiple Int a deriving Show
 encodeModified :: Eq a => [a] -> [Encode a]
 encodeModified xs = map toEncode $ group xs
                     where toEncode :: [a] -> Encode a
-                          toEncode (a:[])          = Single a
-                          toEncode as@(a:rest)     = Multiple (length as) a
+                          toEncode [a]         = Single a
+                          toEncode as@(a:rest) = Multiple (length as) a
 
 decodeModified :: Eq a => [Encode a] -> [a]
-decodeModified xs = concatMap decode xs
+decodeModified = concatMap decode
                     where decode (Multiple n a) = replicate n a
                           decode (Single a)     = [a]
 
