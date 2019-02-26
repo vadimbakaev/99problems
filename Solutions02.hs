@@ -35,3 +35,6 @@ dropEvery [] _ = []
 dropEvery xs n
             | n < 1 = []
             | otherwise = take (n - 1) xs ++ dropEvery (drop n xs) n
+
+split :: [a] -> Int -> ([a], [a])
+split xs n = (take n xs, drop n xs)
