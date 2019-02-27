@@ -38,3 +38,6 @@ dropEvery xs n
 
 split :: [a] -> Int -> ([a], [a])
 split xs n = (take n xs, drop n xs)
+
+slice :: [a] -> Int -> Int -> [a]
+slice xs n m = (take (m - n + 1) . drop (n - 1)) xs
