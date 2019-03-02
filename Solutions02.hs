@@ -46,5 +46,5 @@ rotate :: [a] -> Int -> [a]
 rotate xs n =  drop k xs ++ take k xs
               where k = n `mod` length xs
 
-removeAt :: Int -> [a] -> [a]
-removeAt n xs = [x | (x, i) <- xs `zip` [1..], i /= n]
+removeAt :: Int -> [a] -> (a, [a])
+removeAt n xs = (xs !! (n - 1), [x | (x, i) <- xs `zip` [1..], i /= n])
