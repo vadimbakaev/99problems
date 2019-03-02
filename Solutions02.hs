@@ -44,7 +44,7 @@ slice xs n m = (take (m - n + 1) . drop (n - 1)) xs
 
 rotate :: [a] -> Int -> [a]
 rotate xs n =  drop k xs ++ take k xs
-              where k = n `mod` (length xs)
+              where k = n `mod` length xs
 
 removeAt :: Int -> [a] -> [a]
 removeAt n xs = [x | (x, i) <- xs `zip` [1..], i /= n]
