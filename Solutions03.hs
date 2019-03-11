@@ -1,7 +1,7 @@
 module Solutions03 where
 import Data.List
 import System.Random
-import System.Random.Shuffle
+import Control.Monad
 
 insertAt :: a -> [a] -> Int -> [a]
 insertAt x xs i = left ++ x:right
@@ -13,6 +13,6 @@ range m n | m == n     = [n]
           | otherwise  = m : (range (m - 1) n)
 
 rnd_select :: [a] -> Int -> IO [a]
-rnd_select xs n = do gen <- newStdGen
-                     return $ take n (shuffle' xs (length xs) gen)
+rnd_select xs n = do ys <- replicateM n (getStdRandom(randomR(0, length xs - 1)))
+                     return $ map (xs !!) ys
 
