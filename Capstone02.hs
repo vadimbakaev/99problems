@@ -1,4 +1,5 @@
 module Capstone03 where
+import Data.List
 
 data FourLetterAlphabet = L1 | L2 | L3 | L4 deriving (Show, Enum, Bounded)
 
@@ -52,3 +53,82 @@ rotDecoder :: String -> String
 rotDecoder text = map rotCharDecoder text
     where rotCharDecoder = rotNdecoder alphaSize
           alphaSize = 1 + fromEnum (maxBound :: Char)
+
+xorBool :: Bool -> Bool -> Bool
+xorBool a b = (a || b) && (not (a && b))
+
+xorPair :: (Bool, Bool) -> Bool
+xorPair (a, b) = a `xorBool` b
+
+xor :: [Bool] -> [Bool] -> [Bool]
+xor xs ys = map xorPair (xs `zip` ys)
+
+type Bits = [Bool]
+
+intToBits' :: Int -> Bits
+intToBits' 0 = [False]
+intToBits' 1 = [True]
+intToBits' n =  (remainder == 1) : intToBits' nextValue
+    where remainder = n `mod` 2
+          nextValue = n `div` 2
+                  
+maxBits :: Int
+maxBits = length (intToBits' maxBound)
+
+intToBits :: Int -> Bits
+intToBits n = leadingFalses ++ reversedBits
+    where leadingFalses = take missingBits (cycle [False])
+          missingBits = maxBits - (length reversedBits)
+          reversedBits = reverse (intToBits' n)
+
+charToBits :: Char -> Bits
+charToBits char = intToBits (fromEnum char)
+
+bitsToInt :: Bits -> Int
+bitsToInt bits = sum (map (2^) trueLocations)
+    where trueLocations = map snd $ filter fst ((reverse bits) `zip` [0..])
+
+bitsToChar :: Bits -> Char
+bitsToChar = toEnum . bitsToInt
+
+myPad :: String
+myPad = "Shhhhhh"
+
+myPlainText :: String
+myPlainText = "Haskell"
+
+applyOTP' :: String -> String -> [Bits]
+applyOTP' pad plainText = map (\(a, b) -> a `xor` b) (padBits `zip` plainTextBits)
+    where padBits = map charToBits pad
+          plainTextBits = map charToBits plainText
+
+applyOTP :: String -> String -> String
+applyOTP pad plainText = map bitsToChar bitList
+    where bitList = applyOTP' pad plainText
+
+encoderDecoder :: String -> String
+encoderDecoder = applyOTP myPad
+
+class Chiper a where
+  encode :: a -> String -> String
+  decode :: a -> String -> String
+
+data Rot = Rot
+
+instance Chiper Rot where
+  encode Rot = rotEncoder
+  decode Rot = rotDecoder
+
+data OneTimePad = OTP String
+
+instance Chiper OneTimePad where
+  encode (OTP pad) = applyOTP pad
+  decode = encode
+
+myOTP :: OneTimePad
+myOTP = OTP (cycle [minBound..maxBound])
+
+prng :: Int -> Int -> Int -> Int -> Int
+prng a b maxNumber seed = (a*seed + b) `mod` maxNumber
+
+  
