@@ -23,3 +23,6 @@ diffSelect x n = replicateM x (getStdRandom (randomR(1, n)))
 rndPermu :: [a] -> IO [a]
 rndPermu xs = do gen <- newStdGen
                  return $ shuffle' xs (length xs) gen
+
+combinations :: Eq a => Int -> [a] -> [[a]]
+combinations n = nub . map (take n) . permutations
