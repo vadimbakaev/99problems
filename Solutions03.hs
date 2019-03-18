@@ -3,6 +3,7 @@ import Data.List
 import System.Random
 import Control.Monad
 import System.Random.Shuffle
+import Data.Function
 
 insertAt :: a -> [a] -> Int -> [a]
 insertAt x xs i = left ++ x:right
@@ -26,3 +27,6 @@ rndPermu xs = do gen <- newStdGen
 
 combinations :: Eq a => Int -> [a] -> [[a]]
 combinations n = nub . map (take n) . permutations
+
+lsort :: [[a]] -> [[a]]
+lsort = sortBy (compare `on` length)
