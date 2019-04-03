@@ -4,6 +4,7 @@ import System.Random
 import Control.Monad
 import System.Random.Shuffle
 import Data.Function
+import qualified Data.Map as M
 
 insertAt :: a -> [a] -> Int -> [a]
 insertAt x xs i = left ++ x:right
@@ -30,3 +31,8 @@ combinations n = nub . map (take n) . permutations
 
 lsort :: [[a]] -> [[a]]
 lsort = sortBy (compare `on` length)
+
+lfsort :: [[a]] -> [[a]]
+lfsort xs = concatSortByLength $ concatSortByLength (M.elems (freqMap $ reverse $ M.elems (freqMap xs)))
+    where concatSortByLength = concat . sortBy (compare `on` length)
+          freqMap xs = M.fromListWith (++) (map (\x -> (length x, [x])) (reverse xs))
