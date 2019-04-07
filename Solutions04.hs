@@ -7,3 +7,6 @@ isPrime n = n > 1 && null [x | x <- [2..sqrtN n], n `mod` x == 0]
 myGCD :: Int -> Int -> Int
 myGCD a 0 = abs a
 myGCD a b = myGCD b (a `mod` b) 
+
+coprime :: Int -> Int -> Bool
+coprime a b = gcd a b == 1
