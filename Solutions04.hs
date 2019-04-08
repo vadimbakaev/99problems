@@ -10,3 +10,6 @@ myGCD a b = myGCD b (a `mod` b)
 
 coprime :: Int -> Int -> Bool
 coprime a b = gcd a b == 1
+
+totient :: Int -> Int
+totient n = length [x | x <- [1 .. n - 1], gcd x n == 1]
