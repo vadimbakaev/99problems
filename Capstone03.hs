@@ -7,7 +7,7 @@ import Data.Maybe
 
 file1 :: [(Int, Double)]
 file1 = [(1, 200.1), (2, 199.5), (3, 199.4)
-        ,(4, 198.9), (5, 199.0), (6, 199.2)
+        ,(4, 198.9), (5, 199.0), (6, 200.2)
         ,(9, 200.3), (10, 201.2), (12, 202.9)]
 
 file2 :: [(Int, Double)]
@@ -87,4 +87,73 @@ mean :: (Real a) => [a] -> Double
 mean xs = total / count
     where total = (realToFrac . sum) xs
           count = (realToFrac . length) xs
+
+
+          
   
+meanTS :: (Real a) => TS a -> Maybe Double
+meanTS (TS _ []) = Nothing
+meanTS (TS times values) = if all (== Nothing) values
+                           then Nothing
+                           else Just avg
+    where avg = mean cleanValues
+          cleanValues = map fromJust justValues
+          justValues = filter isJust values
+
+type CompareFunc a = a -> a -> a
+type TSCompareFunc a = (Int, Maybe a) -> (Int, Maybe a) -> (Int, Maybe a)
+
+makeTSCompare :: Eq a => CompareFunc a -> TSCompareFunc a
+makeTSCompare func = newFunc
+    where newFunc (i1, Nothing) (i2, Nothing) = (i1, Nothing)
+          newFunc (_, Nothing) (i, val) = (i, val)
+          newFunc (i, val) (_, Nothing) = (i, val)
+          newFunc (i1, Just val1) (i2, Just val2) = if func val1 val2 == val1
+                                                    then (i1, Just val1)
+                                                    else (i2, Just val2)
+          
+                               
+compareTS :: Eq a => (a -> a -> a) -> TS a -> Maybe (Int, Maybe a)
+compareTS func (TS [] []) = Nothing
+compareTS func (TS times values) = if all (== Nothing) values
+                                   then Nothing
+                                   else Just best
+    where best = foldl (makeTSCompare func) (0, Nothing) pairs
+          pairs = times `zip` values
+                                        
+minTS :: Ord a => TS a -> Maybe (Int, Maybe a)
+minTS = compareTS min
+
+maxTS :: Ord a => TS a -> Maybe (Int, Maybe a)
+maxTS = compareTS max
+
+diffPair :: Num a => Maybe a -> Maybe a -> Maybe a
+diffPair (Just x) (Just y) = Just (x - y)
+diffPair _ _ = Nothing
+
+diffTS :: Num a => TS a -> TS a
+diffTS (TS [] []) = TS [] []
+diffTS (TS times values) = TS times (Nothing:diffValues)
+    where shiftValues = tail values
+          diffValues = zipWith diffPair shiftValues values
+
+meanMaybe :: (Real a) => [Maybe a] -> Maybe Double
+meanMaybe vals = if any (== Nothing) vals
+                 then Nothing
+                 else (Just avg)
+    where avg = mean (map fromJust vals)
+                      
+movingAvg :: (Real a) => [Maybe a] -> Int -> [Maybe Double]
+movingAvg [] _ = []
+movingAvg vals n = if length nextVals == n
+                   then meanMaybe nextVals:movingAvg restVals n
+                   else []
+    where nextVals = take n vals
+          restVals = tail vals
+                        
+movingAverageTS :: (Real a) => TS a -> Int -> TS Double
+movingAverageTS (TS [] []) _ = TS [] []
+movingAverageTS (TS times values) n = TS times smoothedValeus
+    where smoothedValeus = mconcat [nothing, ma, nothing]
+          nothing = replicate (n `div` 2) Nothing
+          ma = movingAvg values n
