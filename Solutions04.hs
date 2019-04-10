@@ -13,3 +13,10 @@ coprime a b = gcd a b == 1
 
 totient :: Int -> Int
 totient n = length [x | x <- [1 .. n - 1], gcd x n == 1]
+
+primeFactors :: Integer -> [Integer]
+primeFactors n | isPrime n = [n]
+               | otherwise = prime : primeFactors (n `div` prime)
+    where prime = head [p | p <- primes, gcd n p /= 1]
+          primes = filterPrime [2..]
+              where filterPrime (p:xs) = p:[x | x <- xs, x `mod` p /= 0]
