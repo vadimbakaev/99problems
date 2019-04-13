@@ -1,5 +1,7 @@
 module Solutions04 where
 
+import Data.List
+
 isPrime :: Integer -> Bool
 isPrime n = n > 1 && null [x | x <- [2..sqrtN n], n `mod` x == 0]
     where sqrtN = floor . sqrt . fromInteger
@@ -20,3 +22,7 @@ primeFactors n | isPrime n = [n]
     where prime = head [p | p <- primes, gcd n p /= 1]
           primes = filterPrime [2..]
               where filterPrime (p:xs) = p:[x | x <- xs, x `mod` p /= 0]
+
+primeFactorsMult :: Integer -> [(Integer, Int)]
+primeFactorsMult = map (\xs -> (head xs, length xs)) . group . primeFactors
+               
