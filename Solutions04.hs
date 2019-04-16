@@ -25,4 +25,9 @@ primeFactors n | isPrime n = [n]
 
 primeFactorsMult :: Integer -> [(Integer, Int)]
 primeFactorsMult = map (\xs -> (head xs, length xs)) . group . primeFactors
+
+primeR :: Integer -> Integer -> [Integer]
+primeR l r = (dropWhile (<l) . takeWhile (<r)) primes
+    where primes = map head (iterate crossout [2..])
+              where crossout (x:xs) = filter ((0 /=) . (`mod` x)) xs
                
