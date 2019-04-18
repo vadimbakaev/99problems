@@ -31,3 +31,9 @@ primeR l r = (takeWhile (<r) . dropWhile (<l)) primes
     where primes = map head (iterate crossout [2..])
           crossout (x:xs) = filter ((0 /=) . (`mod` x)) xs
                
+goldbatch :: Int -> (Int, Int)
+goldbatch n = head [(a, b) | (a, b) <- (,) <$> primesN <*> primesN, a + b == n]
+    where primesN = take n primes
+          primes = map head (iterate crossout [2..])
+          crossout (x:xs) = [x' | x' <- xs, x' `mod` x /= 0]
+                           
