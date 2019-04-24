@@ -1,6 +1,7 @@
 module Solutions04 where
 
 import Data.List
+import Data.Maybe
 
 isPrime :: Integer -> Bool
 isPrime n = n > 1 && null [x | x <- [2..sqrtN n], n `mod` x == 0]
@@ -36,4 +37,17 @@ goldbatch n = head [(a, b) | (a, b) <- (,) <$> primesN <*> primesN, a + b == n]
     where primesN = take n primes
           primes = map head (iterate crossout [2..])
           crossout (x:xs) = [x' | x' <- xs, x' `mod` x /= 0]
+
+goldbatch' :: Int -> Maybe (Int, Int)
+goldbatch' n = listToMaybe $ take 1 [(a, b) | (a, b) <- (,) <$> primesN <*> primesN, a + b == n]
+    where primesN = take n primes
+          primes = map head (iterate crossout [2..])
+          crossout (x:xs) = [x' | x' <- xs, x' `mod` x /= 0]
+          
                            
+goldbatchList :: Int -> Int -> [(Int, Int)]
+goldbatchList l r = catMaybes (map goldbatch' ([l',l'+2..r] \\ primesN))
+    where primesN = takeWhile (<r) primes
+          primes = map head (iterate crossout [2..])
+          l' = if l `mod` 2 == 0 then l else l - 1
+          crossout (x:xs) = filter ((/=0).(`mod` x)) xs
